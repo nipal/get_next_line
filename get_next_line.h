@@ -20,6 +20,8 @@
 # define BUFF_SIZE 32
 # define TARGET_CHAR '\n'
 # define SIZE_BUFF ((BUFF_SIZE > 0 || BUFF_SIZE > 2147483647) ? BUFF_SIZE : 32)
+# define DESTROY 1
+# define CLEAN 2
 
 typedef	struct				s_dfile
 {

@@ -1,4 +1,3 @@
-p
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -13,93 +12,89 @@ p
 
 #include "get_next_line.h"
 
-static	t_dfile	*creat_dfile(int fd)
+static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 {
 	t_dfile	*elem;
 	
-		elem = (t_dfile*)malloc(sizeof(t_dfile));
+	elem = (t_dfile*)malloc(sizeof(t_dfile));
 	if (!elem)
 		return (NULL);
-	elem->next_fd = *lst;
+	elem->next_fd = next_fd;
 	elem->next_str = NULL;
 	elem->i = 0;
 	elem->str = (char*)malloc(sizeof(SIZE_BUFF + 1));
 	if (!elem->str)
 		return (NULL);
-	if ((elem->size = read(fd, elem->str, SIZE_BUFF)) < 0 && *err = 1)
+	if ((elem->size = read(fd, elem->str, SIZE_BUFF)) < 0)
 		return (NULL);
+	else if (elem->size != BUFF_SIZE)
+		elem->size += read(fd, elem->(str + elem->size), BUFF_SIZE - elem->size)
 	(elem->str)[elem->size] = '\0';
-
 }
 
-//	si le fichier est terminer, on free tout
-//	si le '\n' arrive a la fin du buffer...
-//	si non on free tout sauf le dernier element
-//	il faut aussi que en fresant les truc on garde les bon pointeur tout ca on peu faire une copie
-static	void	free_branche_and_replace()
+//	on peu netoyer la branche de deux manier:
+//		-on suprime toute une branche
+//		-on vide tout j'usqu'a l'avant dernier maillon 
+
+static	void	free_branche(t_dfile *elem, t_dfile *prev, int mode)
 {
 	
+	//	soit on passe en argument l'element qui pointe sur lui
 } 
 
-static	t_dfile	*get_rignt_fd(t_dfile **lst, int fd, int *err)
+static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 {
 	t_dfile	*elem;
 
 	elem = *lst;
 	while (elem && elem->id != fd)
+	{
+		*prev = elem;
 		elem = elem->next_fd;
+	}
 	if (!elem)
 	{
-		elem = (t_dfile*)malloc(sizeof(t_dfile));
+		elem = creat_dfile(fd, *lst);
 		if (!elem)
 			return (NULL);
-		elem->next_fd = *lst;
-		elem->next_str = NULL;
-		elem->i = 0;
-		elem->str = (char*)malloc(sizeof(SIZE_BUFF + 1));
-		if (!elem->str)
-			return (NULL);
-		if ((elem->size = read(fd, elem->str, SIZE_BUFF)) < 0 && *err = 1)
-			return (NULL);
-		(elem->str)[elem->size] = '\0';
 		*lst = elem;
 	}
 	return (elem);
 }
 
-static	char	*get_line(t_dfile *begin, int nb_char)
+//	on lis la str a partir de l'indice jusque:
+//		|1| fin du fichier
+//		|2| caracter fin de ligne
+
+//		-(tite verife pour voir si on est vraiment a la fin du fichier)->creat
+//	
+//	 
+//		-on malloc une chaine la bonne taille
+//		-on redefini lindice
+//		-on copie tout les buffer different
+//	|1|	-on free en mode destroy
+//	|2|	-on free en mode clean
+static	char	*get_line(t_dfile *begin, int *error)
 {
 	char	*str;
 	t_dfile	*elem;
+	int		nb_char;
 
-	str = begin->(str + i);
+	str = begin->(str + begin->i);
+
 	while (*str && *str != TARGET_CHAR)
 		str++;
-	while (!(*str))
-	{
-		// on a besoin d'un nouveau buffer
-	}
-	else
-		// 	
-
-
-
 }
 
 int	get_next_line(int const fd, char **line)
 {
 	static	t_dfile	*lst = 0;
 	t_dfile			*elem;
+	t_dfile			*prev;
 	int				error;
 
-	elem = get_rignt_fd(&lst, fd, &error, 0);
+	prev = NULL;
+	elem = get_right_fd(&lst, fd, &prev);
 	
 	return (1);
 }
-
-
-
-//	On	place l'element sur le bon fd
-//		-si il n'y en a pas un cree un t_dfile, on remplis le buffeur, et on plas e curseur a 0
-
-//	On cherche le premier '\n'	

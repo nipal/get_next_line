@@ -15,8 +15,9 @@
 int	main(void)
 {
 	char	*str;
-	int		back;
-
-	back = get_next_line(0, &str);
-	dprintf(1, "%s\noct:%d\n", str, back);
+	//9223372036854775808	
+	//15446744073709551614
+	str = (char *)malloc(9223372036854775807);
+	printf("%ld\n", (long)*str);
+	return (0);
 }
