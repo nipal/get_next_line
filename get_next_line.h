@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:50:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/19 08:47:29 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/19 19:05:34 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <fcntl.h>
 # define BUFF_SIZE 32
 # define TARGET_CHAR '\n'
-# define SIZE_BUFF ((BUFF_SIZE > 0 || BUFF_SIZE > 2147483647) ? BUFF_SIZE : 32)
 # define DESTROY 1
 # define CLEAN 2
 
@@ -34,3 +33,10 @@ typedef	struct				s_dfile
 }							t_dfile;
 int							get_next_line(int const fd, char ** line);
 #endif
+
+
+//static	t_dfile		*creat_dfile(int fd, t_dfile *next_fd)					:	DONE
+//static	void		free_branche(t_dfile *elem, t_dfile *prev, int mode)	:	DONE
+//static	t_dfile		*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)	:	DONE
+//static	char		*get_line(t_dfile *begin, int *error)					:	
+//int					get_next_line(int const fd, char **line)				:	

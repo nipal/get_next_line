@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/19 03:39:52 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/19 19:05:37 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,33 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 
 static	void	free_branche(t_dfile *elem, t_dfile *prev, int mode)
 {
-	
-	//	soit on passe en argument l'element qui pointe sur lui
+	t_dfile	*tmp;
+
+	if (mode == DESTROY)
+	{
+		prev->next_fd = elem->next_fd;
+		while(elem)
+		{
+			tmp = elem->next;
+			free(elem->str);
+			free(elem);
+			elem = tmp;
+		}
+	}
+	else if (mode == CLEAN && elem)
+	{
+		while(elem->next)
+		{
+			tmp = elem->next;
+			free(elem->str);
+			free(elem);
+			elem = tmp;
+		}
+		prev->next_fd = elem;
+	}
 } 
 
+//	DONE
 static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 {
 	t_dfile	*elem;
