@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 02:15:45 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/18 02:24:21 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 09:46:09 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -15,9 +15,15 @@
 int	main(void)
 {
 	char	*str;
-	//9223372036854775808	
-	//15446744073709551614
-	str = (char *)malloc(9223372036854775807);
-	printf("%ld\n", (long)*str);
+	int		end;
+
+	while ((end = get_next_line(0, &str)) == 1)
+	{
+		dprintf(1, "	>>>>>>>>>>>>end:%d<<<<<<<<<<<<<<\n", end);
+		dprintf(1, "%ld\n", (long)*str);
+dprintf(1, "line:|%s|\n", (str + 1));
+	}
+dprintf(1, "final_line:|%s|\n", (str));
+	printf("end whith:%d\n", end);
 	return (0);
 }
