@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 05:12:19 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 05:19:30 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 {
 	t_dfile	*elem;
-	
+
 	elem = (t_dfile*)malloc(sizeof(t_dfile));
 	if (!elem)
 		return (NULL);
@@ -28,8 +28,8 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	if ((elem->size = read(fd, elem->str, BUFF_SIZE)) < 0)
 		return (NULL);
 	else if (elem->size != BUFF_SIZE)
-		elem->size += read(fd, (elem->str + elem->size), BUFF_SIZE - elem->size);
-	*(elem->str + elem->i) = '\0';
+		elem->size += read(fd, elem->str + elem->size, BUFF_SIZE - elem->size);
+	*(elem->str + elem->size) = '\0';
 	return (elem);
 }
 
