@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/19 19:05:37 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 04:46:22 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,37 +32,36 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	(elem->str)[elem->size] = '\0';
 }
 
-//	on peu netoyer la branche de deux manier:
+//	on peu utiliser la branche de trois manier:
 //		-on suprime toute une branche
 //		-on vide tout j'usqu'a l'avant dernier maillon 
+//		on copy la chaine du maillon sur une chaine de caaractere
+//
 
-static	void	free_branche(t_dfile *elem, t_dfile *prev, int mode)
+//	DONE
+static	void	manip_branche(int mode, t_dfile *elem, t_dfile *prev, char *copy)
 {
 	t_dfile	*tmp;
 
 	if (mode == DESTROY)
-	{
 		prev->next_fd = elem->next_fd;
-		while(elem)
-		{
-			tmp = elem->next;
-			free(elem->str);
-			free(elem);
-			elem = tmp;
-		}
-	}
-	else if (mode == CLEAN && elem)
+	while (elem && ((mode != CLEAN) || (elem->next_fd)))
 	{
-		while(elem->next)
+		tmp = elem->next_fd;
+		while (mode == COPY && *elem->str++)
+			*(copy++) = *(elem->str - 1);
+		if ((elem->next && mode == CLEAN) || mode == DESTROY)
 		{
-			tmp = elem->next;
 			free(elem->str);
 			free(elem);
-			elem = tmp;
 		}
-		prev->next_fd = elem;
+		else if (mode == COPY)
+			tmp = elem->next_char;
+		elem = tmp;
 	}
-} 
+	if (mode == CLEAN && elem)
+		prev->next_fd = elem;
+}
 
 //	DONE
 static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
@@ -85,28 +84,30 @@ static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 	return (elem);
 }
 
-//	on lis la str a partir de l'indice jusque:
-//		|1| fin du fichier
-//		|2| caracter fin de ligne
-
-//		-(tite verife pour voir si on est vraiment a la fin du fichier)->creat
-//	
-//	 
-//		-on malloc une chaine la bonne taille
-//		-on redefini lindice
-//		-on copie tout les buffer different
-//	|1|	-on free en mode destroy
-//	|2|	-on free en mode clean
-static	char	*get_line(t_dfile *begin, int *error)
+static	int		get_line(t_dfile *elem, t_dfile *prev, char **line, int *error)
 {
 	char	*str;
 	t_dfile	*elem;
 	int		nb_char;
 
-	str = begin->(str + begin->i);
-
+	str = elem->(str + elem->i);
 	while (*str && *str != TARGET_CHAR)
-		str++;
+	{
+		while (*str && *str != TARGET_CHAR)
+			str++;
+		nb_char += str - (elem->str - elem->i);
+		if (!(*str) && elem->size == (BUFF_SIZE))
+		{
+			if (!(elem->next_char = creat_dfile(elem->fd, elem->next_fd)))
+				return ((*(error  = -1)));
+			str = elem->(str + elem->i);
+		}
+	}
+	if ((*line = malloc(sizeof(char) * (nb_char + 1))))
+		return (((*error = -1) * 0));
+	manip_branche(COPY, elem, prev, *line);
+	manip_branche(CLEAN, elem, prev, 0);
+	return (1);
 }
 
 int	get_next_line(int const fd, char **line)
@@ -118,6 +119,7 @@ int	get_next_line(int const fd, char **line)
 
 	prev = NULL;
 	elem = get_right_fd(&lst, fd, &prev);
-	
+	if ((get_line(elem, prev, line, &error) != 1))
+		return (error);
 	return (1);
 }

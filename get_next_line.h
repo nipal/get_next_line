@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:50:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/19 19:05:34 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 02:59:27 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # define TARGET_CHAR '\n'
 # define DESTROY 1
 # define CLEAN 2
+# define COPY 4
 
 typedef	struct				s_dfile
 {
