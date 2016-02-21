@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 14:09:03 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 14:52:57 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,14 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 {
 	t_dfile	*elem;
 
+	elem = NULL;
 dprintf(1, "			fd_creat:%d\n", fd);
 dprintf(1, "			creat_elem====>fd:%d\n", fd);
-	elem = (t_dfile*)malloc(sizeof(t_dfile));
+dprintf(1, "			PETI BA\n");
+dprintf(1, "elem:%ld\n", (long)elem);
+//dprintf(1, "malloc:%ld\n", (long)((t_dfile*)malloc(sizeof(t_dfile))));
+	elem = (t_dfile*) malloc(sizeof(t_dfile));
+dprintf(1, "			PETI BATTOOOOOO\n");
 	if (!elem)
 		return (NULL);
 	elem->next_fd = next_fd;
@@ -154,7 +159,7 @@ dprintf(1, "get_line\n");
 dprintf(1, "this is the END1\n");
 		nb_char += str - (elem->str - elem->i);
 dprintf(1, "this is the END2\n");
-dprintf(1, "str:%ld size:%d buff:%d\n", (long)(*str), elem->size, BUFF_SIZE);
+dprintf(1, "str:%d size:%d buff:%d\n", (*str), elem->size, BUFF_SIZE);
 		if (!(*(str))  && elem->size == (BUFF_SIZE))
 		{
 dprintf(1, "this is the END3\n");
@@ -164,6 +169,7 @@ dprintf(1, "elem->next_str:%ld\n", (long)(elem->next_str));
 dprintf(1, "memory elem error\n");
 				return (-1);
 }
+			elem = elem->next_str;
 			str = elem->str + elem->i;
 		}
 		else
