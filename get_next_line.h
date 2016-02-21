@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:50:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 02:59:27 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 04:48:02 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int							get_next_line(int const fd, char ** line);
 
 
 //static	t_dfile		*creat_dfile(int fd, t_dfile *next_fd)					:	DONE
-//static	void		free_branche(t_dfile *elem, t_dfile *prev, int mode)	:	DONE
+//static	void		manip_branch(t_dfile *elem, t_dfile *prev, int mode)	:	DONE
 //static	t_dfile		*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)	:	DONE
-//static	char		*get_line(t_dfile *begin, int *error)					:	
-//int					get_next_line(int const fd, char **line)				:	
+//static	char		*get_line(t_dfile *begin, int *error)					:	DONE
+//int					get_next_line(int const fd, char **line)				:	DONE

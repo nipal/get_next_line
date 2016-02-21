@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 04:46:22 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 04:55:08 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,6 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	(elem->str)[elem->size] = '\0';
 }
 
-//	on peu utiliser la branche de trois manier:
-//		-on suprime toute une branche
-//		-on vide tout j'usqu'a l'avant dernier maillon 
-//		on copy la chaine du maillon sur une chaine de caaractere
-//
-
-//	DONE
 static	void	manip_branche(int mode, t_dfile *elem, t_dfile *prev, char *copy)
 {
 	t_dfile	*tmp;
@@ -63,7 +56,6 @@ static	void	manip_branche(int mode, t_dfile *elem, t_dfile *prev, char *copy)
 		prev->next_fd = elem;
 }
 
-//	DONE
 static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 {
 	t_dfile	*elem;
@@ -106,7 +98,10 @@ static	int		get_line(t_dfile *elem, t_dfile *prev, char **line, int *error)
 	if ((*line = malloc(sizeof(char) * (nb_char + 1))))
 		return (((*error = -1) * 0));
 	manip_branche(COPY, elem, prev, *line);
-	manip_branche(CLEAN, elem, prev, 0);
+	if (elem->size == BUFF_SIZE)
+		manip_branche(CLEAN, elem, prev, 0);
+	else
+		manip_branche(DESTROY, elem, prev, 0);
 	return (1);
 }
 
