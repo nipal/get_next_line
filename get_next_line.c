@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 10:28:40 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 14:09:03 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ if (mode == CLEAN)
 	dprintf(1, "next:#%ld#\n", (long)(elem->next_str));
 	while (elem && ((mode != CLEAN) || (elem->next_str)))
 	{
-dprintf(1, "bcl:%ld\n", (long)(elem));
+dprintf(1, "bcl**:%ld\n", (long)(elem));
 		tmp = elem->next_fd;
 		str_buff = elem->str + elem->i ;
-dprintf(1, "i:%d\n", elem->i);
+dprintf(1, "i**:%d\n", elem->i);
 		while (mode == COPY && *(str_buff) && *(str_buff) != TARGET_CHAR)
 {
 //dprintf(1, "\nadr%ld	", (long)elem->str);
@@ -72,13 +72,15 @@ dprintf(1, "i:%d\n", elem->i);
 //dprintf(1, "-%c", *(copy ));
 			str_buff++;
 			copy++;
-			++elem->i;
+			elem->i++;
 }
-			++elem->i;
+			elem->i++;
+if (mode == COPY)
+			*(copy) = '\0';
 //	elem->i += str_buff - elem->str;
-	if (*(str_buff) == '\0')
+if (*(str_buff) == '\0')
 {
-	dprintf(1, "%cTHIS IS THE END\n", *(str_buff));
+	dprintf(1, "%c$$$	THIS IS THE END	$$$\n", *(str_buff));
 		ret = 0;
 }
 		if ((elem->next_str && mode == CLEAN) || mode == DESTROY)
@@ -185,6 +187,10 @@ dprintf(1, "memory line error for:%d\n", nb_char + 1);
 //dprintf(1, "line:%ld\n", (long)(line));
 //dprintf(1, "*line:%ld\n", (long)(*line));
 }
+	line[0][nb_char] = '\0';
+//	line[0][nb_char - 2] = '\0';
+//	line[0][nb_char - 1] = '\0';
+//	line[0][nb_char - 1] = '\0';
 	ret = manip_branche(COPY, elem, prev, *line);
 dprintf(1, "La c'est bon:::	|%s|\n", *line);
 dprintf(1, "prev:%ld\n", (long)(prev));
