@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 09:46:07 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 10:28:40 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 {
 	t_dfile	*elem;
 
+dprintf(1, "			fd_creat:%d\n", fd);
 dprintf(1, "			creat_elem====>fd:%d\n", fd);
 	elem = (t_dfile*)malloc(sizeof(t_dfile));
 	if (!elem)
@@ -24,6 +25,7 @@ dprintf(1, "			creat_elem====>fd:%d\n", fd);
 	elem->next_fd = next_fd;
 	elem->next_str = NULL;
 	elem->i = 0;
+	elem->fd = fd;
 	elem->str = (char*)malloc(sizeof(BUFF_SIZE + 1));
 	if (!elem->str)
 		return (NULL);
@@ -60,16 +62,20 @@ if (mode == CLEAN)
 	{
 dprintf(1, "bcl:%ld\n", (long)(elem));
 		tmp = elem->next_fd;
-		str_buff = elem->str;
+		str_buff = elem->str + elem->i ;
+dprintf(1, "i:%d\n", elem->i);
 		while (mode == COPY && *(str_buff) && *(str_buff) != TARGET_CHAR)
 {
-dprintf(1, "\nadr%ld	", (long)elem->str);
-dprintf(1, "|%c", *str_buff);
+//dprintf(1, "\nadr%ld	", (long)elem->str);
+//dprintf(1, "|%c", *str_buff);
 			*(copy) = *(str_buff);
-dprintf(1, "-%c", *(copy ));
+//dprintf(1, "-%c", *(copy ));
 			str_buff++;
 			copy++;
+			++elem->i;
 }
+			++elem->i;
+//	elem->i += str_buff - elem->str;
 	if (*(str_buff) == '\0')
 {
 	dprintf(1, "%cTHIS IS THE END\n", *(str_buff));
@@ -77,9 +83,9 @@ dprintf(1, "-%c", *(copy ));
 }
 		if ((elem->next_str && mode == CLEAN) || mode == DESTROY)
 		{
-dprintf(1, "Holo hala yolo\n");
+//dprintf(1, "Holo hala yolo\n");
 			tmp = elem->next_str;
-dprintf(1, "Holo hala yolo2\nstr:%s\nadr:%ld\n", elem->str, (long)elem->str);
+//dprintf(1, "Holo hala yolo2\nstr:%s\nadr:%ld\n", elem->str, (long)elem->str);
 			if (elem->str && (*(elem->str)))
 			{
 dprintf(1, "kkkglojp::	|%s|\n", elem->str);
@@ -104,19 +110,26 @@ static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 {
 	t_dfile	*elem;
 
+dprintf(1, "GET_THE_RIGHT_FD\n");
 	elem = *lst;
 	while (elem && elem->fd != fd)
 	{
+dprintf(1, "fd->%d\n", elem->fd);
 		*prev = elem;
 		elem = elem->next_fd;
 	}
 	if (!elem)
 	{
+dprintf(1, "			fd_creat:%d\n", fd);
 		elem = creat_dfile(fd, *lst);
 		if (!elem)
+{
+dprintf(1, "END_GET\n");
 			return (NULL);
+}
 		*lst = elem;
 	}
+dprintf(1, "END_GET\n");
 	return (elem);
 }
 
@@ -133,7 +146,7 @@ dprintf(1, "get_line\n");
 	{
 		while (*str && *str != TARGET_CHAR)
 		{
-dprintf(1, "str:%c\n", *(str));
+//dprintf(1, "str:%c\n", *(str));
 			str++;
 		}
 dprintf(1, "this is the END1\n");
@@ -157,20 +170,20 @@ dprintf(1, "memory elem error\n");
 }
 	}
 	dprintf(1, "nb_char:%d\n", nb_char);
-dprintf(1, "line:%ld\n", (long)(line));
-dprintf(1, "*line:%ld\n", (long)(*line));
+//dprintf(1, "line:%ld\n", (long)(line));
+//dprintf(1, "*line:%ld\n", (long)(*line));
 *line = (char*)malloc(sizeof(char) * (nb_char + 1));
 	if (!line)
 	{
-dprintf(1, "trololole\n");
-dprintf(1, "line:%ld\n", (long)(line));
+//dprintf(1, "trololole\n");
+//dprintf(1, "line:%ld\n", (long)(line));
 dprintf(1, "memory line error for:%d\n", nb_char + 1);
 		return (-1);
 	}
 	else
 {
-dprintf(1, "line:%ld\n", (long)(line));
-dprintf(1, "*line:%ld\n", (long)(*line));
+//dprintf(1, "line:%ld\n", (long)(line));
+//dprintf(1, "*line:%ld\n", (long)(*line));
 }
 	ret = manip_branche(COPY, elem, prev, *line);
 dprintf(1, "La c'est bon:::	|%s|\n", *line);
