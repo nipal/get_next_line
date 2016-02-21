@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 14:52:57 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/21 14:58:39 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,17 @@ dprintf(1, "bcl**:%ld\n", (long)(elem));
 dprintf(1, "i**:%d\n", elem->i);
 		while (mode == COPY && *(str_buff) && *(str_buff) != TARGET_CHAR)
 {
-//dprintf(1, "\nadr%ld	", (long)elem->str);
-//dprintf(1, "|%c", *str_buff);
 			*(copy) = *(str_buff);
-//dprintf(1, "-%c", *(copy ));
 			str_buff++;
 			copy++;
 			elem->i++;
 }
 			elem->i++;
 if (mode == COPY)
+{
 			*(copy) = '\0';
 //	elem->i += str_buff - elem->str;
+}
 if (*(str_buff) == '\0')
 {
 	dprintf(1, "%c$$$	THIS IS THE END	$$$\n", *(str_buff));
@@ -90,9 +89,7 @@ if (*(str_buff) == '\0')
 }
 		if ((elem->next_str && mode == CLEAN) || mode == DESTROY)
 		{
-//dprintf(1, "Holo hala yolo\n");
 			tmp = elem->next_str;
-//dprintf(1, "Holo hala yolo2\nstr:%s\nadr:%ld\n", elem->str, (long)elem->str);
 			if (elem->str && (*(elem->str)))
 			{
 dprintf(1, "kkkglojp::	|%s|\n", elem->str);
