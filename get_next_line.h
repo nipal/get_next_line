@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:50:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/22 10:13:33 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 11:12:44 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include <sys/uio.h>
 #include <unistd.h>
 
-# define BUFF_SIZE 100
+# define BUFF_SIZE 10
 # define TARGET_CHAR '\n'
 # define DESTROY 1
 # define CLEAN 2
@@ -41,6 +41,7 @@
 //		::::	MANIP_BRANCH	::::
 # define PRINT_WRONG_FD			1
 # define PRINT_NEW_FD			1
+# define PRINT_COPY_SIZE		1
 
 
 //		::::	CREAT_DFILE 	::::

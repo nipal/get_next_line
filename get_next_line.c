@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/22 09:54:57 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 11:11:29 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,12 +125,13 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	return (elem);
 }
 
-static	int		manip_branche(int mode, t_dfile *elem
-				, t_dfile *prev, char *copy)
+static	int		manip_branche(int mode, t_dfile *elem, t_dfile *prev, char *copy)
 {
 	t_dfile	*tmp;
 	char	*str_buff;
 	int		ret;
+
+char *save_copy = copy;
 
 	ret = 1;
 
@@ -145,6 +146,9 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 		dprintf(1, "[--DESTROY--]\n");
 }
 
+
+	if (mode == COPY)
+		print_str_branch(elem);
 	if (mode == DESTROY && prev)
 		prev->next_fd = elem->next_fd;
 //	if (mode == CLEAN)
@@ -167,7 +171,7 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 			}
 			if (*(str_buff) == '\0')
 			{
-			ret = 0;
+				ret = 0;
 			}
 			if ((elem->next_str && mode == CLEAN) || mode == DESTROY)
 			{
@@ -182,6 +186,8 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 				tmp = elem->next_str;
 			elem = tmp;
 		}
+	if (mode == COPY && DEBUG && PRINT_COPY_SIZE)
+		dprintf(1, "size_str:%ld\n", (long)(copy - save_copy));
 //	}
 	if (mode == CLEAN && prev)
 		prev->next_fd = elem;
@@ -231,12 +237,14 @@ static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 	return (elem);
 }
 
-static	int		get_line(t_dfile *elem, t_dfile *prev, char **line)
+static	int		get_line(t_dfile *begin, t_dfile *prev, char **line)
 {
-	char	*str;
-	int		nb_char;
-	int		ret;
+	char		*str;
+	int			nb_char;
+	int			ret;
+	t_dfile	*elem;
 	
+	elem = begin;
 	if (DEBUG && DEBUG_GET_LINE)
 		dprintf(1, "::::       GET_LINE      ::::\n");
 	nb_char = 0;
@@ -271,16 +279,16 @@ static	int		get_line(t_dfile *elem, t_dfile *prev, char **line)
 	}
 
 // on copy la chaine si 
-	ret = manip_branche(COPY, elem, prev, *line);
+	ret = manip_branche(COPY, begin, prev, *line);
 
 	if (DEBUG && DEBUG_GET_LINE && PRINT_RESULT)
 		dprintf(1, "line:|%s|\n", *line);
 // on clean si on a remplis le buffer ou sinon si le dernier \n n'est pas a la fin de la chaine 
 	if (elem->size == BUFF_SIZE || ret)
-		manip_branche(CLEAN, elem, prev, 0);
+		manip_branche(CLEAN, begin, prev, 0);
 	else
 	{
-		manip_branche(DESTROY, elem, prev, 0);
+		manip_branche(DESTROY, begin, prev, 0);
 		if (DEBUG && DEBUG_GET_LINE)
 			dprintf(1, "::::     END_GET_LINE  0  ::::\n");
 		return (0);

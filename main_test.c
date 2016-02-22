@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 02:15:45 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/22 10:05:45 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 10:49:22 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -33,5 +33,4 @@ dprintf(1, "################final_line:|%s|\n", (str));
 }
 
 
-//	il ne faut pas ajouter le '\n' a la ligne lu
 //	et les ligne se copie mal (comme si on ne copiai que la dernier parti)
