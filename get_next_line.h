@@ -41,3 +41,6 @@ int							get_next_line(int const fd, char ** line);
 //static	t_dfile		*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)	:	DONE
 //static	char		*get_line(t_dfile *begin, int *error)					:	DONE
 //int					get_next_line(int const fd, char **line)				:	DONE
+
+// ON va essayer de separer manip branch en trois fonction de les regle aux ognion puis de le remerger
+
