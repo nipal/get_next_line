@@ -23,7 +23,7 @@
 #include <sys/uio.h>
 #include <unistd.h>
 
-# define BUFF_SIZE 2
+# define BUFF_SIZE 5
 # define TARGET_CHAR '\n'
 # define DESTROY 1
 # define CLEAN 2
@@ -31,7 +31,7 @@
 
 
 
-# define NAME_FT				0
+# define NAME_FT				1
 
 # define DEBUG					1
 # define DEBUG_MANIP_BRANCH		1
@@ -54,22 +54,22 @@
 
 
 //		::::	GET_LINE    	::::
-# define PRINT_RESULT			0
+# define PRINT_RESULT			1
 
 
 //		::::	GET_NEXT_LINE	::::
-# define PRINT_RETURN 			0 
+# define PRINT_RETURN 			1 
 
 
 //		::::	PRINT_DFILE 	::::
-# define PRINT_VALID			0
-# define PRINT_NEXT_FD			0
-# define PRINT_NEXT_STR			0
-# define PRINT_FD				0
-# define PRINT_I				0
-# define PRINT_SIZE				0
-# define PRINT_STR				0
-# define PRINT_STAGE			0
+# define PRINT_VALID			1
+# define PRINT_NEXT_FD			1
+# define PRINT_NEXT_STR			1
+# define PRINT_FD				1
+# define PRINT_I				1
+# define PRINT_SIZE				1
+# define PRINT_STR				1
+# define PRINT_STAGE			1
 
 typedef	struct				s_dfile
 {

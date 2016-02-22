@@ -129,16 +129,17 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd, int stage)
 	return (elem);
 }
 
-static	int		manip_branche(int mode, t_dfile *elem, t_dfile *prev, char *copy)
+static	int		manip_branche(int mode, t_dfile **begin, t_dfile *prev, char *copy)
 {
 	t_dfile	*tmp;
+	t_dfile	*elem;
 	char	*str_buff;
 	int		ret;
 
 char *save_copy = copy;
 
 	ret = 1;
-
+	elem = *begin;
 if (DEBUG_MANIP_BRANCH && DEBUG)
 {
 	dprintf(1, ":::: BEGIN MANIP_BRANCH	 ::::	mode:");
@@ -177,8 +178,12 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 			{
 				ret = 0;
 			}
+dprintf(1, "cvbn next_str:%ld\n", (long)(elem->next_str));
+if (mode == DESTROY)
+dprintf(1, "cvbn DESTROY\n");
 			if ((elem->next_str && mode == CLEAN) || mode == DESTROY)
 			{
+dprintf(1, "nbvc\n");
 				tmp = elem->next_str;
 				if (elem->str && (*(elem->str)))
 				{
@@ -187,12 +192,13 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 //					free(elem->str);
 				}
 				
-				dprintf(1, "))))freee elem fd:%d stage:%d\n", elem->fd, elem->stage);
+				dprintf(1, "			))))freee elem fd:%d stage:%d\n", elem->fd, elem->stage);
 //				free(elem);
 			}
 			else if (mode == COPY || mode == CLEAN)
 				tmp = elem->next_str;
 			elem = tmp;
+			*begin = tmp;
 		}
 	if (mode == COPY && DEBUG && PRINT_COPY_SIZE)
 		dprintf(1, "size_str:%ld\n", (long)(copy - save_copy));
@@ -245,14 +251,14 @@ static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 	return (elem);
 }
 
-static	int		get_line(t_dfile *begin, t_dfile *prev, char **line)
+static	int		get_line(t_dfile **begin, t_dfile *prev, char **line)
 {
 	char		*str;
 	int			nb_char;
 	int			ret;
 	t_dfile	*elem;
 	
-	elem = begin;
+	elem = *begin;
 	if (DEBUG && DEBUG_GET_LINE)
 		dprintf(1, "::::       GET_LINE      ::::\n");
 	nb_char = 0;
@@ -322,10 +328,11 @@ int				get_next_line(int const fd, char **line)
 	elem = get_right_fd(&lst, fd, &prev);
 //		if (prev && *prev)
 
+if (DEBUG)
 dprintf(1, "			&elem:%ld &lst:%ld\n", (long)&elem, (long)&lst);
-	if ((((long)elem) == ((long)(lst))))
+	if ((((long)elem) == ((long)(lst))) && DEBUG)
 		dprintf(1, "						FUUUUCKE YEARRR!!\n");
-	if ((error = get_line(elem, prev, line)) != 1)
+	if ((error = get_line(&elem, prev, line)) != 1)
 	{
 		if (DEBUG && DEBUG_GET_NEXT_LINE)
 		{
