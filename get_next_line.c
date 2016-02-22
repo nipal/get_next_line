@@ -6,39 +6,58 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 14:58:39 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 06:57:53 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
+void	print_dfile(t_file *elem, int mode)
+{
+	
+}
+
 static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 {
 	t_dfile	*elem;
 
 	elem = NULL;
-dprintf(1, "			fd_creat:%d\n", fd);
-dprintf(1, "			creat_elem====>fd:%d\n", fd);
-dprintf(1, "			PETI BA\n");
-dprintf(1, "elem:%ld\n", (long)elem);
-//dprintf(1, "malloc:%ld\n", (long)((t_dfile*)malloc(sizeof(t_dfile))));
+	if (DEBUG && DEBUG_CREAT_DFILE)
+	{
+		dprintf(1, "\n\n\n::::    CREAT_DFILE fd:%d    ::::\n", fd);
+
+		dprintf(1, "			fd_creat:%d\n", fd);
+		dprintf(1, "			creat_elem====>fd:%d\n", fd);
+		dprintf(1, "elem:%ld\n", (long)elem);
+	}
 	elem = (t_dfile*) malloc(sizeof(t_dfile));
-dprintf(1, "			PETI BATTOOOOOO\n");
 	if (!elem)
+	{
+		if (DEBUG && DEBUG_CREAT_dFILE)
+			dprintf(1, "\n\n\n::::  END_CREAT_DFILE (null)  ::::\n");
 		return (NULL);
+	}
 	elem->next_fd = next_fd;
 	elem->next_str = NULL;
 	elem->i = 0;
 	elem->fd = fd;
 	elem->str = (char*)malloc(sizeof(BUFF_SIZE + 1));
 	if (!elem->str)
+	{
+		if (DEBUG && DEBUG_CREAT_dFILE)
+			dprintf(1, "\n\n\n::::  END_CREAT_DFILE (null)  ::::\n");
 		return (NULL);
+	}
 	if ((elem->size = read(fd, elem->str, BUFF_SIZE)) < 0)
+	{
+		if (DEBUG && DEBUG_CREAT_dFILE)
+			dprintf(1, "\n\n\n::::  END_CREAT_DFILE (null)  ::::\n");
 		return (NULL);
-//	else if (elem->size != BUFF_SIZE)
-//		elem->size += read(fd, elem->str + elem->size, BUFF_SIZE - elem->size);
+	}
 	*(elem->str + elem->size) = '\0';
+		if (DEBUG && DEBUG_CREAT_dFILE)
+			dprintf(1, "\n\n\n::::  END_CREAT_DFILE  (ok)   ::::\n");
 	return (elem);
 }
 
@@ -50,63 +69,63 @@ static	int		manip_branche(int mode, t_dfile *elem
 	int		ret;
 
 	ret = 1;
-dprintf(1, "\n\n\n		:::: BEGIN MANIP_BRANCH ::::	mode:");
-if (mode == COPY)
-	dprintf(1, "[---COPY----]\n");
-if (mode == CLEAN)
-	dprintf(1, "[---CLEAN---]\n");
-if (mode == DESTROY)
-	dprintf(1, "[--DESTROY--]\n");
+
+if (DEBUG_MANIP_BRANCH && DEBUG)
+{
+	dprintf(1, "\n\n\n:::: BEGIN MANIP_BRANCH	 ::::	mode:");
+	if (mode == COPY)
+		dprintf(1, "[---COPY----]\n");
+	if (mode == CLEAN)
+		dprintf(1, "[---CLEAN---]\n");
+	if (mode == DESTROY)
+		dprintf(1, "[--DESTROY--]\n");
+}
 
 	if (mode == DESTROY && prev)
 		prev->next_fd = elem->next_fd;
-dprintf(1, "elem:%ld\n", (long)(elem));
-if (mode == CLEAN)
-	dprintf(1, "next:#%ld#\n", (long)(elem->next_str));
-	while (elem && ((mode != CLEAN) || (elem->next_str)))
-	{
-dprintf(1, "bcl**:%ld\n", (long)(elem));
-		tmp = elem->next_fd;
-		str_buff = elem->str + elem->i ;
-dprintf(1, "i**:%d\n", elem->i);
-		while (mode == COPY && *(str_buff) && *(str_buff) != TARGET_CHAR)
-{
-			*(copy) = *(str_buff);
-			str_buff++;
-			copy++;
-			elem->i++;
-}
-			elem->i++;
-if (mode == COPY)
-{
-			*(copy) = '\0';
-//	elem->i += str_buff - elem->str;
-}
-if (*(str_buff) == '\0')
-{
-	dprintf(1, "%c$$$	THIS IS THE END	$$$\n", *(str_buff));
-		ret = 0;
-}
-		if ((elem->next_str && mode == CLEAN) || mode == DESTROY)
+//	if (mode == CLEAN)
+//	{
+		while (elem && ((mode != CLEAN) || (elem->next_str)))
 		{
-			tmp = elem->next_str;
-			if (elem->str && (*(elem->str)))
+			tmp = elem->next_fd;
+			str_buff = elem->str + elem->i ;
+			while (mode == COPY && *(str_buff) && *(str_buff) != TARGET_CHAR)
 			{
-dprintf(1, "kkkglojp::	|%s|\n", elem->str);
-				free(elem->str);
+				*(copy) = *(str_buff);
+				str_buff++;
+				copy++;
+				elem->i++;
 			}
-dprintf(1, "Holo hala yolo3\n");
-			free(elem);
-dprintf(1, "Holo hala yolo4\n");
+				elem->i++;
+			if (mode == COPY)
+			{
+				*(copy) = '\0';
+			}
+			if (*(str_buff) == '\0')
+			{
+			ret = 0;
+			}
+			if ((elem->next_str && mode == CLEAN) || mode == DESTROY)
+			{
+				tmp = elem->next_str;
+				if (elem->str && (*(elem->str)))
+				{
+					free(elem->str);
+				}
+				free(elem);
+			}
+			else if (mode == COPY || mode == CLEAN)
+				tmp = elem->next_str;
+			elem = tmp;
 		}
-		else if (mode == COPY || mode == CLEAN)
-			tmp = elem->next_str;
-		elem = tmp;
-	}
+//	}
 	if (mode == CLEAN && prev)
 		prev->next_fd = elem;
 
-dprintf(1, "		:::: ENDING MANIP_BRANCH ::::\n\n\n\n");
+	if (DEBUG_MANIP_BRANCH && DEBUG)
+	{
+		dprintf(1, "---- ENDING MANIP_BRANCH ----\n\n\n\n");
+	}
 	return (ret);
 }
 
@@ -114,36 +133,48 @@ static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 {
 	t_dfile	*elem;
 
-dprintf(1, "GET_THE_RIGHT_FD\n");
+	if (DEBUG && DEBUG_GET_RIGHT_FD)
+	{
+		dprintf(1, "::::   GET_THE_RIGHT_FD  ::::\n");
+	}
+
 	elem = *lst;
 	while (elem && elem->fd != fd)
 	{
-dprintf(1, "fd->%d\n", elem->fd);
+		if (DEBUG && DEBUG_GET_RIGHT_FD && PRINT_WRONG_FD)
+			{dprintf(1, "			fd_wrong:%d\n", elem->fd);}
 		*prev = elem;
 		elem = elem->next_fd;
 	}
 	if (!elem)
 	{
-dprintf(1, "			fd_creat:%d\n", fd);
+		if (DEBUG && DEBUG_GET_RIGHT_FD && PRINT_NEW_FD)
+			{dprintf(1, "			fd_creat:%d\n", fd);}
 		elem = creat_dfile(fd, *lst);
 		if (!elem)
-{
-dprintf(1, "END_GET\n");
+		{
+			if (DEBUG && DEBUG_GET_RIGHT_FD)
+				{dprintf(1, "----       END_GET_creat ----\n");}
 			return (NULL);
-}
+		}
 		*lst = elem;
 	}
-dprintf(1, "END_GET\n");
+
+	if (DEBUG && DEBUG_GET_RIGHT_FD)
+	{
+		dprintf(1, "----       END_GET_find  ----\n");
+	}
 	return (elem);
 }
 
-static	int		get_line(t_dfile *elem, t_dfile *prev, char **line, int fd)
+static	int		get_line(t_dfile *elem, t_dfile *prev, char **line)
 {
 	char	*str;
 	int		nb_char;
 	int		ret;
-
-dprintf(1, "get_line\n");
+	
+	if (DEBUG && DEBUG_GET_LINE)
+		dprintf(1, "::::       GET_LINE      ::::\n");
 	nb_char = 0;
 	str = elem->str + elem->i;
 	while (*str && *str != TARGET_CHAR)
@@ -153,58 +184,38 @@ dprintf(1, "get_line\n");
 //dprintf(1, "str:%c\n", *(str));
 			str++;
 		}
-dprintf(1, "this is the END1\n");
 		nb_char += str - (elem->str - elem->i);
-dprintf(1, "this is the END2\n");
-dprintf(1, "str:%d size:%d buff:%d\n", (*str), elem->size, BUFF_SIZE);
 		if (!(*(str))  && elem->size == (BUFF_SIZE))
 		{
-dprintf(1, "this is the END3\n");
 			if (!(elem->next_str = creat_dfile(elem->fd, elem->next_fd)))
-{
-dprintf(1, "elem->next_str:%ld\n", (long)(elem->next_str));
-dprintf(1, "memory elem error\n");
+			{
+				if (DEBUG && DEBUG_GET_LINE)
+					dprintf(1, "::::     END_GET_LINE -1  ::::\n");
 				return (-1);
-}
+			}
 			elem = elem->next_str;
 			str = elem->str + elem->i;
 		}
-		else
-{
-	dprintf(1, "BOUH\n");
-}
 	}
-	dprintf(1, "nb_char:%d\n", nb_char);
-//dprintf(1, "line:%ld\n", (long)(line));
-//dprintf(1, "*line:%ld\n", (long)(*line));
 *line = (char*)malloc(sizeof(char) * (nb_char + 1));
 	if (!line)
 	{
-//dprintf(1, "trololole\n");
-//dprintf(1, "line:%ld\n", (long)(line));
-dprintf(1, "memory line error for:%d\n", nb_char + 1);
+		if (DEBUG && DEBUG_GET_LINE)
+			dprintf(1, "::::     END_GET_LINE -1  ::::\n");
 		return (-1);
 	}
-	else
-{
-//dprintf(1, "line:%ld\n", (long)(line));
-//dprintf(1, "*line:%ld\n", (long)(*line));
-}
-	line[0][nb_char] = '\0';
-//	line[0][nb_char - 2] = '\0';
-//	line[0][nb_char - 1] = '\0';
-//	line[0][nb_char - 1] = '\0';
 	ret = manip_branche(COPY, elem, prev, *line);
-dprintf(1, "La c'est bon:::	|%s|\n", *line);
-dprintf(1, "prev:%ld\n", (long)(prev));
 	if (elem->size == BUFF_SIZE || ret)
 		manip_branche(CLEAN, elem, prev, 0);
 	else
-{
+	{
 		manip_branche(DESTROY, elem, prev, 0);
-	dprintf(1, "copy:|%s|\n", *line);
+		if (DEBUG && DEBUG_GET_LINE)
+			dprintf(1, "::::     END_GET_LINE  0  ::::\n");
 		return (0);
-}
+	}
+	if (DEBUG && DEBUG_GET_LINE)
+		dprintf(1, "::::     END_GET_LINE  1  ::::\n");
 	return (1);
 }
 
@@ -215,11 +226,30 @@ int				get_next_line(int const fd, char **line)
 	t_dfile			*prev;
 	int				error;
 
+	if (DEBUG && DEBUG_GET_NEXT_LINE)
+			dprintf(1, "::::       GET_LINE      ::::\n");
+
 	prev = NULL;
 	elem = get_right_fd(&lst, fd, &prev);
-	if ((error = get_line(elem, prev, line, fd)) != 1)
+	if ((error = get_line(elem, prev, line)) != 1)
 	{
+		if (DEBUG && DEBUG_GET_NEXT_LINE)
+		{
+			if (PRINT_RETURN)
+			{
+				dprintf(1, "return:|%s|\n", *line);
+			}
+			dprintf(1, "::::     END_GET_LINE %d   ::::\n", error);
+		}
 		return (error);
+	}
+	if (DEBUG && DEBUG_GET_NEXT_LINE)
+	{
+			if (PRINT_RETURN)
+			{
+				dprintf(1, "return:|%s|\n", *line);
+			}
+			dprintf(1, "::::     END_GET_LINE 0   ::::\n");
 	}
 	return (1);
 }
