@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/22 06:57:53 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 08:48:27 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,72 @@
 
 void	print_dfile(t_file *elem, int mode)
 {
-	
+	int	i;
+
+	i = 0;
+	if (elem)
+	{
+		if (DEBUG && PRINT_VALID)
+			dprintf(1, "ok\n");
+		if (DEBUG && PRINT_NEXT_STR)
+			dprintf(1, "next_fd:%d\n", (long)elem->next_fd);	
+		if (DEBUG && PRINT_NEXT_FD)
+			dprintf(1, "next_str:%d\n", (long)elem->next_str);	
+		if (DEBUG && PRINT_FD)
+			dprintf(1, "fd:%d\n", elem->fd);	
+		if (DEBUG && PRINT_I)
+			dprintf(1, "i:%d\n", elem->i);	
+
+		if (DEBUG && PRINT_STR)
+		{
+			while (i < elem->i - 1)
+			{
+				write(1, " ", 1);
+				i++;
+			}
+			write(1, "|", 1);
+			
+			i = 0;
+			while (i < elem->size - 1)
+			{
+				write(1, " ", 1);
+				i++;
+			}
+			write(1, "#", 1);
+
+			dprintf(1, "str:%s\n", elem->str);	
+		}
+	}
+	else
+	{
+		if (DEBUG && PRINT_VALID)
+			dprintf(1, "null\n");
+	}
+	dprintf(1, "\n");
+}
+
+void print_str_branch(t_dfile *begin)
+{
+	t_dfile	*elem;
+
+	elem = begin;
+	while (elem)
+	{
+		print_dfile(elem);
+		elem = elem->next_str;
+	}
+}
+
+void print_all(t_dfile *begin)
+{
+	t_dfile	*elem;
+
+	elem = begin;
+	while (elem)
+	{
+		print_str_branch(elem);
+		elem = elem->next_fd;
+	}
 }
 
 static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
@@ -25,17 +90,13 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	elem = NULL;
 	if (DEBUG && DEBUG_CREAT_DFILE)
 	{
-		dprintf(1, "\n\n\n::::    CREAT_DFILE fd:%d    ::::\n", fd);
-
-		dprintf(1, "			fd_creat:%d\n", fd);
-		dprintf(1, "			creat_elem====>fd:%d\n", fd);
-		dprintf(1, "elem:%ld\n", (long)elem);
+		dprintf(1, "\n\n\n=======>CREAT_DFILE fd:%d    ::::\n", fd);
 	}
 	elem = (t_dfile*) malloc(sizeof(t_dfile));
 	if (!elem)
 	{
-		if (DEBUG && DEBUG_CREAT_dFILE)
-			dprintf(1, "\n\n\n::::  END_CREAT_DFILE (null)  ::::\n");
+		if (DEBUG && DEBUG_CREAT_DFILE)
+			dprintf(1, "n::::  END_CREAT_DFILE (null-elem)  ::::\n");
 		return (NULL);
 	}
 	elem->next_fd = next_fd;
@@ -45,19 +106,21 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	elem->str = (char*)malloc(sizeof(BUFF_SIZE + 1));
 	if (!elem->str)
 	{
-		if (DEBUG && DEBUG_CREAT_dFILE)
-			dprintf(1, "\n\n\n::::  END_CREAT_DFILE (null)  ::::\n");
+		if (DEBUG && DEBUG_CREAT_DFILE)
+			dprintf(1, "::::  END_CREAT_DFILE (null-str)  ::::\n");
 		return (NULL);
 	}
 	if ((elem->size = read(fd, elem->str, BUFF_SIZE)) < 0)
 	{
-		if (DEBUG && DEBUG_CREAT_dFILE)
-			dprintf(1, "\n\n\n::::  END_CREAT_DFILE (null)  ::::\n");
+		if (DEBUG && DEBUG_CREAT_DFILE)
+			dprintf(1, "::::  END_CREAT_DFILE (err->read)  ::::\n");
 		return (NULL);
 	}
 	*(elem->str + elem->size) = '\0';
-		if (DEBUG && DEBUG_CREAT_dFILE)
-			dprintf(1, "\n\n\n::::  END_CREAT_DFILE  (ok)   ::::\n");
+	if (DEBUG && && DEBUG_CREAT_DFILE && PRINT_ELEM)
+		print_dfile(elem);
+	if (DEBUG && DEBUG_CREAT_DFILE)
+		dprintf(1, "::::  END_CREAT_DFILE  (ok)   ::::\n");
 	return (elem);
 }
 
@@ -177,13 +240,12 @@ static	int		get_line(t_dfile *elem, t_dfile *prev, char **line)
 		dprintf(1, "::::       GET_LINE      ::::\n");
 	nb_char = 0;
 	str = elem->str + elem->i;
+	
+//	on cherche un '\n' si il n'y en a pas a la fin du buffeur on recupere une autre element
 	while (*str && *str != TARGET_CHAR)
 	{
 		while (*str && *str != TARGET_CHAR)
-		{
-//dprintf(1, "str:%c\n", *(str));
 			str++;
-		}
 		nb_char += str - (elem->str - elem->i);
 		if (!(*(str))  && elem->size == (BUFF_SIZE))
 		{
@@ -197,6 +259,8 @@ static	int		get_line(t_dfile *elem, t_dfile *prev, char **line)
 			str = elem->str + elem->i;
 		}
 	}
+
+//	on connai la taille on malloc une chaine
 *line = (char*)malloc(sizeof(char) * (nb_char + 1));
 	if (!line)
 	{
@@ -204,7 +268,11 @@ static	int		get_line(t_dfile *elem, t_dfile *prev, char **line)
 			dprintf(1, "::::     END_GET_LINE -1  ::::\n");
 		return (-1);
 	}
+
+// on copy la chaine si 
 	ret = manip_branche(COPY, elem, prev, *line);
+
+// on clean si on a remplis le buffer ou sinon si le dernier \n n'est pas a la fin de la chaine 
 	if (elem->size == BUFF_SIZE || ret)
 		manip_branche(CLEAN, elem, prev, 0);
 	else
@@ -214,6 +282,8 @@ static	int		get_line(t_dfile *elem, t_dfile *prev, char **line)
 			dprintf(1, "::::     END_GET_LINE  0  ::::\n");
 		return (0);
 	}
+
+
 	if (DEBUG && DEBUG_GET_LINE)
 		dprintf(1, "::::     END_GET_LINE  1  ::::\n");
 	return (1);
