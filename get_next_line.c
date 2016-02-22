@@ -195,12 +195,13 @@ dprintf(1, "cvbn DESTROY\n");
 //					free(elem->str);
 				}
 				
-				dprintf(1, "			))))freee elem fd:%d stage:%d\n", elem->fd, elem->stage);
+				dprintf(1, "cvbn			))))freee elem fd:%d stage:%d\n", elem->fd, elem->stage);
 //				free(elem);
 			}
 			else if (mode == COPY || mode == CLEAN)
 				tmp = elem->next_str;
 			elem = tmp;
+			if (mode != COPY)
 			*begin = tmp;
 		}
 	if (mode == COPY && DEBUG && PRINT_COPY_SIZE)
@@ -262,6 +263,7 @@ static	int		get_line(t_dfile **begin, t_dfile *prev, char **line)
 	t_dfile	*elem;
 	
 	elem = *begin;
+dprintf(1, "cvbn   begin __get_line:%ld\n", (long)((*begin)));
 	if (DEBUG && DEBUG_GET_LINE)
 		dprintf(1, "::::       GET_LINE      ::::\n");
 	nb_char = 0;
@@ -298,20 +300,24 @@ dprintf(1, "cvbn after :%ld\n", (long)(elem->next_str));
 	}
 
 // on copy la chaine si 
+//dprintf(1, "cvbn   befor copy:%ld\n", (long)((*begin)));
 	ret = manip_branche(COPY, begin, prev, *line);
+//dprintf(1, "cvbn   after copy:%ld\n", (long)((*begin)));
 
 	if (DEBUG && DEBUG_GET_LINE && PRINT_RESULT)
 		dprintf(1, "line:|%s|\n", *line);
 // on clean si on a remplis le buffer ou sinon si le dernier \n n'est pas a la fin de la chaine 
 	if ((elem->size == BUFF_SIZE) || ret == 1)
 	{
+//dprintf(1, "cvbn   begin:%ld\n", (long)((*begin)));
 		manip_branche(CLEAN, begin, prev, 0);
+//dprintf(1, "cvbn   begin after CLEAN:%ld\n", (long)((begin)));
 	}
 	else
 	{
 dprintf(1, "cvbn DESTROY MISTIQUE\n\n");
-dprintf(1, "cvbn   DESTROY TIME on:%ld\n\n", (long)((begin)));
-dprintf(1, "cvbn   DESTROY TIME on:%ld\n\n", (long)((*begin)->stage));
+dprintf(1, "cvbn   DESTROY TIME on:%ld\n\n", (long)((*begin)));
+//dprintf(1, "cvbn   DESTROY TIME on:%ld\n\n", (long)((*begin)->stage));
 dprintf(1, "cvbn DESTROY__\n\n");
 		manip_branche(DESTROY, begin, prev, 0);
 		if (DEBUG && DEBUG_GET_LINE && NAME_FT)

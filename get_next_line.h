@@ -31,7 +31,7 @@
 
 
 
-# define NAME_FT				1
+# define NAME_FT				0
 
 # define DEBUG					0
 # define DEBUG_MANIP_BRANCH		1
