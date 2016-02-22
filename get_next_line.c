@@ -138,6 +138,9 @@ static	int		manip_branche(int mode, t_dfile **begin, t_dfile *prev, char *copy)
 
 char *save_copy = copy;
 
+if (mode == DESTROY)
+dprintf(1, "cvbn DESTROY TIME in_manip\n");
+
 	ret = 1;
 	elem = *begin;
 if (DEBUG_MANIP_BRANCH && DEBUG)
@@ -178,12 +181,12 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 			{
 				ret = 0;
 			}
-dprintf(1, "cvbn next_str:%ld\n", (long)(elem->next_str));
+//dprintf(1, "cvbn next_str:%ld\n", (long)(elem->next_str));
 if (mode == DESTROY)
 dprintf(1, "cvbn DESTROY\n");
 			if ((elem->next_str && mode == CLEAN) || mode == DESTROY)
 			{
-dprintf(1, "nbvc\n");
+//dprintf(1, "nbvc\n");
 				tmp = elem->next_str;
 				if (elem->str && (*(elem->str)))
 				{
@@ -272,12 +275,14 @@ static	int		get_line(t_dfile **begin, t_dfile *prev, char **line)
 		nb_char += str - (elem->str - elem->i);
 		if (!(*(str)) && elem->size == (BUFF_SIZE))
 		{
+dprintf(1, "cvbn next_str:%ld\n", (long)(elem->next_str));
 			if (!(elem->next_str = creat_dfile(elem->fd, elem->next_fd, elem->stage + 1)))
 			{
 				if (DEBUG && DEBUG_GET_LINE && NAME_FT)
 					dprintf(1, "::::     END_GET_LINE -1  ::::\n");
 				return (-1);
 			}
+dprintf(1, "cvbn after :%ld\n", (long)(elem->next_str));
 			elem = elem->next_str;
 			str = elem->str + elem->i;
 		}
@@ -298,10 +303,16 @@ static	int		get_line(t_dfile **begin, t_dfile *prev, char **line)
 	if (DEBUG && DEBUG_GET_LINE && PRINT_RESULT)
 		dprintf(1, "line:|%s|\n", *line);
 // on clean si on a remplis le buffer ou sinon si le dernier \n n'est pas a la fin de la chaine 
-	if (elem->size == BUFF_SIZE || ret)
+	if ((elem->size == BUFF_SIZE) || ret == 1)
+	{
 		manip_branche(CLEAN, begin, prev, 0);
+	}
 	else
 	{
+dprintf(1, "cvbn DESTROY MISTIQUE\n\n");
+dprintf(1, "cvbn   DESTROY TIME on:%ld\n\n", (long)((begin)));
+dprintf(1, "cvbn   DESTROY TIME on:%ld\n\n", (long)((*begin)->stage));
+dprintf(1, "cvbn DESTROY__\n\n");
 		manip_branche(DESTROY, begin, prev, 0);
 		if (DEBUG && DEBUG_GET_LINE && NAME_FT)
 			dprintf(1, "::::     END_GET_LINE  0  ::::\n");

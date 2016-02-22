@@ -33,7 +33,7 @@
 
 # define NAME_FT				1
 
-# define DEBUG					1
+# define DEBUG					0
 # define DEBUG_MANIP_BRANCH		1
 # define DEBUG_CREAT_DFILE		1
 # define DEBUG_GET_RIGHT_FD		1
