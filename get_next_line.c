@@ -6,14 +6,14 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/22 08:48:27 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 09:54:57 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
 
-void	print_dfile(t_file *elem, int mode)
+void	print_dfile(t_dfile *elem)
 {
 	int	i;
 
@@ -23,32 +23,33 @@ void	print_dfile(t_file *elem, int mode)
 		if (DEBUG && PRINT_VALID)
 			dprintf(1, "ok\n");
 		if (DEBUG && PRINT_NEXT_STR)
-			dprintf(1, "next_fd:%d\n", (long)elem->next_fd);	
+			dprintf(1, "next_fd:%ld\n", (long)elem->next_fd);	
 		if (DEBUG && PRINT_NEXT_FD)
-			dprintf(1, "next_str:%d\n", (long)elem->next_str);	
+			dprintf(1, "next_str:%ld\n", (long)elem->next_str);	
 		if (DEBUG && PRINT_FD)
 			dprintf(1, "fd:%d\n", elem->fd);	
 		if (DEBUG && PRINT_I)
 			dprintf(1, "i:%d\n", elem->i);	
+		if (DEBUG && PRINT_SIZE)
+			dprintf(1, "size:%d\n", elem->size);	
 
 		if (DEBUG && PRINT_STR)
 		{
-			while (i < elem->i - 1)
+			while (i < elem->i + 4)
 			{
 				write(1, " ", 1);
 				i++;
 			}
-			write(1, "|", 1);
-			
+			write(1, "|\n", 2);
+			dprintf(1, "str:|%s|\n", elem->str);	
 			i = 0;
-			while (i < elem->size - 1)
+			while (i < elem->size + 5)
 			{
 				write(1, " ", 1);
 				i++;
 			}
-			write(1, "#", 1);
+			write(1, "#\n", 2);
 
-			dprintf(1, "str:%s\n", elem->str);	
 		}
 	}
 	else
@@ -117,7 +118,7 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 		return (NULL);
 	}
 	*(elem->str + elem->size) = '\0';
-	if (DEBUG && && DEBUG_CREAT_DFILE && PRINT_ELEM)
+	if (DEBUG && DEBUG_CREAT_DFILE && PRINT_ELEM)
 		print_dfile(elem);
 	if (DEBUG && DEBUG_CREAT_DFILE)
 		dprintf(1, "::::  END_CREAT_DFILE  (ok)   ::::\n");
@@ -272,6 +273,8 @@ static	int		get_line(t_dfile *elem, t_dfile *prev, char **line)
 // on copy la chaine si 
 	ret = manip_branche(COPY, elem, prev, *line);
 
+	if (DEBUG && DEBUG_GET_LINE && PRINT_RESULT)
+		dprintf(1, "line:|%s|\n", *line);
 // on clean si on a remplis le buffer ou sinon si le dernier \n n'est pas a la fin de la chaine 
 	if (elem->size == BUFF_SIZE || ret)
 		manip_branche(CLEAN, elem, prev, 0);

@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:50:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/22 08:00:54 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 10:13:33 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@
 
 
 
-# define DEBUG					1	//DONE
+# define DEBUG					0	//DONE
 # define DEBUG_MANIP_BRANCH		1	//DONE
 # define DEBUG_CREAT_DFILE		1	//DONE
-# define DEBUG_GET_RIGHT_FD		1
+# define DEBUG_GET_RIGHT_FD		1	//DONE
 # define DEBUG_GET_LINE			1	//DONE
 # define DEBUG_GET_NEXT_LINE	1	//DONE
 
@@ -51,6 +51,7 @@
 
 
 //		::::	GET_LINE    	::::
+# define PRINT_RESULT			1
 
 
 //		::::	GET_NEXT_LINE	::::
