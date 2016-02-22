@@ -118,3 +118,4 @@ int	get_next_line(int const fd, char **line)
 		return (error);
 	return (1);
 }
+
