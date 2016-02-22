@@ -23,7 +23,7 @@
 #include <sys/uio.h>
 #include <unistd.h>
 
-# define BUFF_SIZE 1
+# define BUFF_SIZE 2
 # define TARGET_CHAR '\n'
 # define DESTROY 1
 # define CLEAN 2
@@ -47,7 +47,7 @@
 
 
 //		::::	CREAT_DFILE 	::::
-# define PRINT_ELEM				0
+# define PRINT_ELEM				1
 
 
 //		::::	GET_RIGHT_FD	::::
@@ -69,6 +69,7 @@
 # define PRINT_I				0
 # define PRINT_SIZE				0
 # define PRINT_STR				0
+# define PRINT_STAGE			0
 
 typedef	struct				s_dfile
 {
@@ -78,6 +79,7 @@ typedef	struct				s_dfile
 	int						i;
 	int						size;
 	char					*str;
+	int						stage;
 }							t_dfile;
 int							get_next_line(int const fd, char **line);
 #endif

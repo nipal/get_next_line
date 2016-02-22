@@ -32,6 +32,8 @@ void	print_dfile(t_dfile *elem)
 			dprintf(1, "i:%d\n", elem->i);	
 		if (DEBUG && PRINT_SIZE)
 			dprintf(1, "size:%d\n", elem->size);	
+		if (DEBUG && PRINT_STAGE)
+			dprintf(1, "stage:%d\n", elem->stage);
 
 		if (DEBUG && PRINT_STR)
 		{
@@ -85,7 +87,7 @@ void print_all(t_dfile *begin)
 	}
 }
 
-static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
+static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd, int stage)
 {
 	t_dfile	*elem;
 
@@ -94,7 +96,7 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	{
 		dprintf(1, "=======>CREAT_DFILE fd:%d    ::::\n", fd);
 	}
-	elem = (t_dfile*) ft_memalloc(sizeof(t_dfile));
+	elem = (t_dfile*) ft_memalloc(sizeof(t_dfile) + 1);
 	if (!elem)
 	{
 		if (DEBUG && DEBUG_CREAT_DFILE && NAME_FT)
@@ -105,7 +107,7 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	elem->next_str = NULL;
 	elem->i = 0;
 	elem->fd = fd;
-	elem->str = (char*)ft_memalloc(sizeof(BUFF_SIZE + 1));
+	elem->str = (char*)ft_memalloc(sizeof(char) * (BUFF_SIZE + 2));
 	if (!elem->str)
 	{
 		if (DEBUG && DEBUG_CREAT_DFILE)
@@ -119,6 +121,7 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 		return (NULL);
 	}
 	*(elem->str + elem->size) = '\0';
+	elem->stage = stage;
 	if (DEBUG && DEBUG_CREAT_DFILE && PRINT_ELEM)
 		print_dfile(elem);
 	if (DEBUG && DEBUG_CREAT_DFILE && NAME_FT)
@@ -184,7 +187,7 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 //					free(elem->str);
 				}
 				
-				dprintf(1, "))))freee elem \n");
+				dprintf(1, "))))freee elem fd:%d stage:%d\n", elem->fd, elem->stage);
 //				free(elem);
 			}
 			else if (mode == COPY || mode == CLEAN)
@@ -225,7 +228,7 @@ static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 	{
 		if (DEBUG && DEBUG_GET_RIGHT_FD && PRINT_NEW_FD)
 			{dprintf(1, "			fd_creat:%d\n", fd);}
-		elem = creat_dfile(fd, *lst);
+		elem = creat_dfile(fd, *lst, 0);
 		if (!elem)
 		{
 			if (DEBUG && DEBUG_GET_RIGHT_FD && NAME_FT)
@@ -261,9 +264,9 @@ static	int		get_line(t_dfile *begin, t_dfile *prev, char **line)
 		while (*str && *str != TARGET_CHAR)
 			str++;
 		nb_char += str - (elem->str - elem->i);
-		if (!(*(str))  && elem->size == (BUFF_SIZE))
+		if (!(*(str)) && elem->size == (BUFF_SIZE))
 		{
-			if (!(elem->next_str = creat_dfile(elem->fd, elem->next_fd)))
+			if (!(elem->next_str = creat_dfile(elem->fd, elem->next_fd, elem->stage + 1)))
 			{
 				if (DEBUG && DEBUG_GET_LINE && NAME_FT)
 					dprintf(1, "::::     END_GET_LINE -1  ::::\n");
@@ -275,7 +278,7 @@ static	int		get_line(t_dfile *begin, t_dfile *prev, char **line)
 	}
 
 //	on connai la taille on malloc une chaine
-*line = (char*)ft_memalloc(sizeof(char) * (nb_char + 1));
+*line = (char*)ft_memalloc(sizeof(char) * (nb_char + 2));
 	if (!line)
 	{
 		if (DEBUG && DEBUG_GET_LINE && NAME_FT)
@@ -317,6 +320,11 @@ int				get_next_line(int const fd, char **line)
 
 	prev = NULL;
 	elem = get_right_fd(&lst, fd, &prev);
+//		if (prev && *prev)
+
+dprintf(1, "			&elem:%ld &lst:%ld\n", (long)&elem, (long)&lst);
+	if ((((long)elem) == ((long)(lst))))
+		dprintf(1, "						FUUUUCKE YEARRR!!\n");
 	if ((error = get_line(elem, prev, line)) != 1)
 	{
 		if (DEBUG && DEBUG_GET_NEXT_LINE)
