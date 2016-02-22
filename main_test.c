@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/18 02:15:45 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/22 10:49:22 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 15:20:38 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -17,18 +17,17 @@ int	main(void)
 	char	*str;
 	int		end;
 	int		i;
+	int		line = 0;
 
 	i = 0;
 	while ((end = get_next_line(0, &str)) == 1 && i >= 0)
 	{
-		dprintf(1, "	>>>>>>>>>>>>end:%d<<<<<<<<<<<<<<\n", end);
-//		dprintf(1, "%ld\n", (long)*(str));
-dprintf(1, "################line:|%s|\n", (str));
+		dprintf(1, "===LINE:===--> %d	", line++);
+		dprintf(1, "|%s|\n", (str));
 i++;
 	}
-		dprintf(1, "	<<<<<<<<<<  end:%d  >>>>>>>>>>>>\n", end);
-dprintf(1, "################final_line:|%s|\n", (str));
-	printf("end whith:%d\n", end);
+		dprintf(1, "===LINE:===--> %d	", line++);
+		dprintf(1, "|%s|\n", (str));
 	return (0);
 }
 

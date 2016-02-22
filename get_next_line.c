@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/22 11:11:29 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/22 14:47:09 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_dfile(t_dfile *elem)
 	int	i;
 
 	i = 0;
-	if (elem)
+	if (elem && DEBUG)
 	{
 		if (DEBUG && PRINT_VALID)
 			dprintf(1, "ok\n");
@@ -52,12 +52,13 @@ void	print_dfile(t_dfile *elem)
 
 		}
 	}
-	else
+	else if (DEBUG)
 	{
 		if (DEBUG && PRINT_VALID)
 			dprintf(1, "null\n");
 	}
-	dprintf(1, "\n");
+//	if (DEBUG)
+//		dprintf(1, "\n");
 }
 
 void print_str_branch(t_dfile *begin)
@@ -91,12 +92,12 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	elem = NULL;
 	if (DEBUG && DEBUG_CREAT_DFILE)
 	{
-		dprintf(1, "\n\n\n=======>CREAT_DFILE fd:%d    ::::\n", fd);
+		dprintf(1, "=======>CREAT_DFILE fd:%d    ::::\n", fd);
 	}
-	elem = (t_dfile*) malloc(sizeof(t_dfile));
+	elem = (t_dfile*) ft_memalloc(sizeof(t_dfile));
 	if (!elem)
 	{
-		if (DEBUG && DEBUG_CREAT_DFILE)
+		if (DEBUG && DEBUG_CREAT_DFILE && NAME_FT)
 			dprintf(1, "n::::  END_CREAT_DFILE (null-elem)  ::::\n");
 		return (NULL);
 	}
@@ -104,7 +105,7 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	elem->next_str = NULL;
 	elem->i = 0;
 	elem->fd = fd;
-	elem->str = (char*)malloc(sizeof(BUFF_SIZE + 1));
+	elem->str = (char*)ft_memalloc(sizeof(BUFF_SIZE + 1));
 	if (!elem->str)
 	{
 		if (DEBUG && DEBUG_CREAT_DFILE)
@@ -113,14 +114,14 @@ static	t_dfile	*creat_dfile(int fd, t_dfile *next_fd)
 	}
 	if ((elem->size = read(fd, elem->str, BUFF_SIZE)) < 0)
 	{
-		if (DEBUG && DEBUG_CREAT_DFILE)
+		if (DEBUG && DEBUG_CREAT_DFILE && NAME_FT)
 			dprintf(1, "::::  END_CREAT_DFILE (err->read)  ::::\n");
 		return (NULL);
 	}
 	*(elem->str + elem->size) = '\0';
 	if (DEBUG && DEBUG_CREAT_DFILE && PRINT_ELEM)
 		print_dfile(elem);
-	if (DEBUG && DEBUG_CREAT_DFILE)
+	if (DEBUG && DEBUG_CREAT_DFILE && NAME_FT)
 		dprintf(1, "::::  END_CREAT_DFILE  (ok)   ::::\n");
 	return (elem);
 }
@@ -137,7 +138,7 @@ char *save_copy = copy;
 
 if (DEBUG_MANIP_BRANCH && DEBUG)
 {
-	dprintf(1, "\n\n\n:::: BEGIN MANIP_BRANCH	 ::::	mode:");
+	dprintf(1, ":::: BEGIN MANIP_BRANCH	 ::::	mode:");
 	if (mode == COPY)
 		dprintf(1, "[---COPY----]\n");
 	if (mode == CLEAN)
@@ -178,9 +179,13 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 				tmp = elem->next_str;
 				if (elem->str && (*(elem->str)))
 				{
-					free(elem->str);
+//					if (DEBUG && DEBUG_MANIP_BRANCH)
+//						dprintf(1, "))))free str\n");
+//					free(elem->str);
 				}
-				free(elem);
+				
+				dprintf(1, "))))freee elem \n");
+//				free(elem);
 			}
 			else if (mode == COPY || mode == CLEAN)
 				tmp = elem->next_str;
@@ -192,9 +197,9 @@ if (DEBUG_MANIP_BRANCH && DEBUG)
 	if (mode == CLEAN && prev)
 		prev->next_fd = elem;
 
-	if (DEBUG_MANIP_BRANCH && DEBUG)
+	if (DEBUG_MANIP_BRANCH && DEBUG && NAME_FT)
 	{
-		dprintf(1, "---- ENDING MANIP_BRANCH ----\n\n\n\n");
+		dprintf(1, "---- ENDING MANIP_BRANCH ----\n");
 	}
 	return (ret);
 }
@@ -203,7 +208,7 @@ static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 {
 	t_dfile	*elem;
 
-	if (DEBUG && DEBUG_GET_RIGHT_FD)
+	if (DEBUG && DEBUG_GET_RIGHT_FD && NAME_FT)
 	{
 		dprintf(1, "::::   GET_THE_RIGHT_FD  ::::\n");
 	}
@@ -223,14 +228,14 @@ static	t_dfile	*get_right_fd(t_dfile **lst, int fd, t_dfile **prev)
 		elem = creat_dfile(fd, *lst);
 		if (!elem)
 		{
-			if (DEBUG && DEBUG_GET_RIGHT_FD)
+			if (DEBUG && DEBUG_GET_RIGHT_FD && NAME_FT)
 				{dprintf(1, "----       END_GET_creat ----\n");}
 			return (NULL);
 		}
 		*lst = elem;
 	}
 
-	if (DEBUG && DEBUG_GET_RIGHT_FD)
+	if (DEBUG && DEBUG_GET_RIGHT_FD && NAME_FT)
 	{
 		dprintf(1, "----       END_GET_find  ----\n");
 	}
@@ -260,7 +265,7 @@ static	int		get_line(t_dfile *begin, t_dfile *prev, char **line)
 		{
 			if (!(elem->next_str = creat_dfile(elem->fd, elem->next_fd)))
 			{
-				if (DEBUG && DEBUG_GET_LINE)
+				if (DEBUG && DEBUG_GET_LINE && NAME_FT)
 					dprintf(1, "::::     END_GET_LINE -1  ::::\n");
 				return (-1);
 			}
@@ -270,10 +275,10 @@ static	int		get_line(t_dfile *begin, t_dfile *prev, char **line)
 	}
 
 //	on connai la taille on malloc une chaine
-*line = (char*)malloc(sizeof(char) * (nb_char + 1));
+*line = (char*)ft_memalloc(sizeof(char) * (nb_char + 1));
 	if (!line)
 	{
-		if (DEBUG && DEBUG_GET_LINE)
+		if (DEBUG && DEBUG_GET_LINE && NAME_FT)
 			dprintf(1, "::::     END_GET_LINE -1  ::::\n");
 		return (-1);
 	}
@@ -289,13 +294,13 @@ static	int		get_line(t_dfile *begin, t_dfile *prev, char **line)
 	else
 	{
 		manip_branche(DESTROY, begin, prev, 0);
-		if (DEBUG && DEBUG_GET_LINE)
+		if (DEBUG && DEBUG_GET_LINE && NAME_FT)
 			dprintf(1, "::::     END_GET_LINE  0  ::::\n");
 		return (0);
 	}
 
 
-	if (DEBUG && DEBUG_GET_LINE)
+	if (DEBUG && DEBUG_GET_LINE && NAME_FT)
 		dprintf(1, "::::     END_GET_LINE  1  ::::\n");
 	return (1);
 }
@@ -307,7 +312,7 @@ int				get_next_line(int const fd, char **line)
 	t_dfile			*prev;
 	int				error;
 
-	if (DEBUG && DEBUG_GET_NEXT_LINE)
+	if (DEBUG && DEBUG_GET_NEXT_LINE && NAME_FT)
 			dprintf(1, "::::       GET_LINE      ::::\n");
 
 	prev = NULL;
@@ -320,7 +325,8 @@ int				get_next_line(int const fd, char **line)
 			{
 				dprintf(1, "return:|%s|\n", *line);
 			}
-			dprintf(1, "::::     END_GET_LINE %d   ::::\n", error);
+			if (DEBUG && NAME_FT)
+				dprintf(1, "::::     END_GET_LINE %d   ::::\n", error);
 		}
 		return (error);
 	}
@@ -330,7 +336,8 @@ int				get_next_line(int const fd, char **line)
 			{
 				dprintf(1, "return:|%s|\n", *line);
 			}
-			dprintf(1, "::::     END_GET_LINE 0   ::::\n");
+			if (DEBUG && NAME_FT)
+				dprintf(1, "::::     END_GET_LINE 0   ::::\n");
 	}
 	return (1);
 }
