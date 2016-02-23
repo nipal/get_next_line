@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/22 21:54:25 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/23 04:36:02 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/23 13:55:38 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	main(void)
 	return (0);
 }
 
-t_list	*copy_line_and_free_lst(t_list *elem, char **dest)
+char	*copy_line_and_free_lst(t_list *elem, char **dest)
 {
 	int		rest;
 	int		i;
@@ -65,17 +65,7 @@ t_list	*copy_line_and_free_lst(t_list *elem, char **dest)
 	}
 	i = ((strchr((char*)elem->content), TARGET_CHAR) - (char*)elem->content);
 	ft_memcopy(*dest + rest, elem->content, (size_t)i);
-	// la la mamoir est copier dans la ligne a envoier
-	if (ft_strlen((char*)(elem->content + i)))
-	{
-		stmp = ft_strdup((char*)(elem->content) + i);
-		free(elem->content);
-		elem->content = stmp;
-		return (elem);
-	}
-	else
-	{
-
-	}
-	return (tmp);
+	stmp = (ft_strlen((char*)(elem->content + i))) ? ft_strdup((char*)((elem->content + i))) : NULL;
+	free(elem->content);
+	return = (stmp);
 }
