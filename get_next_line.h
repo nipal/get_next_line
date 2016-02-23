@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:50:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 04:48:02 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/02/23 04:36:05 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,3 +44,18 @@ int							get_next_line(int const fd, char ** line);
 
 // ON va essayer de separer manip branch en trois fonction de les regle aux ognion puis de le remerger
 
+//	on lis sur le fd tan qu'il y a pas de '\0'
+//		si on en rencontre on commence une liste chainer de la taille d'un buffer
+//	temporairement on stoque la lecture dans une liste chainer && on conte le nombre de caractere stoque (size)
+//
+
+//	on remplis un fd
+//	on remplis la line
+
+//	on a une chaine malloccuer a la bone taille;
+//	on a des list qui contiene ce qu'il faut
+//
+
+//	tant qu'on peu liredans la liste chainer on free tout sauf le dernier element
+//
+//	
