@@ -25,6 +25,7 @@ typedef	struct				s_dfile
 #include <stdio.h>
 
 void	describe_dfile(t_dfile elem)
+dprintf(1, "cvbn   begin:%ld\n", (long)((*begin)));
 {
 	dprintf(1, "");
 }
@@ -46,6 +47,12 @@ int	main(void)
 	return (0);
 }
 
+//	-(*elem)on lui envoie une liste de la ligne avec le \n suivant 
+//		ou si il n'y en a pas avec juste la dernier ligne
+//	-(**dest) la chaine de caractere maloccquer a la bonne taille
+//	#on copy tout les elem de la list dans dest
+//	#on free les element de la liste
+//	#on renvoie la fin de la chaine re maloquer |OU| NULL
 char	*copy_line_and_free_lst(t_list *elem, char **dest)
 {
 	int		rest;
