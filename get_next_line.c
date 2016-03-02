@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/03/02 01:52:41 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/03/02 04:45:39 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static	t_list	*fill_line(t_list *begin, int fd)
 {
 	t_list	*elem;
 	int		i;
+	char	*str;
 
 	elem = begin;
 	if (elem && !elem->content)
@@ -54,13 +55,34 @@ static	t_list	*fill_line(t_list *begin, int fd)
 	while (elem)
 	{
 		elem->content_size += read(fd, elem->content, BUFF_SIZE - elem->content_size);
-		if ((i = (ft_strchr((char*)elem->content, TARGET_CHAR) - elem->content)) < 0)
-			//	on a pas touver de \n
-		else if (i < 0 && elem->content_size != BUFF_SIZE)
-			//	on est a la fin du fichier et on a trouver de \n
+		//	on a pas touver de \n mais il reste de truc a lire dans le fichier
+		//	donc il faut un nouveau chainonx avec unnouveau buffer et un curseur (buff_size)
+		if ((i = (ft_strchr((char*)elem->content, TARGET_CHAR) - (char*)elem->content)) < 0
+				&& elem->content_size == BUFF_SIZE)
+		{
+			(!(str = (char*)malloc(sizeof(char) * (BUFF_SIZE + 1))))
+				return (NULL);
+			str[BUFF_SIZE] = '\0';
+			elem->next = ft_lstnew(str, 0);
+			elem = elem->next;
+		}
+
+		// 	Si	(on est a la fin du fichier) ET (on a pas trouver de \n)
+		else if (i < 0)
+		{
+			//	la le travaille est terminer ET on connai la taille du dernier bufer
+			//	qui est enregistre dans le content_size
+			//	donc juste un return begin
+			return (begin);
+		}
+
+		//	on a trouver un \n. Donc on a plus besoin d'accumuller de nouvaux buffer.
 		else
-			//	on a trouver un \n
+		{
+			return (begin);
+		}
 	}
+	return (begin);
 }
 
 int	get_next_line(int const fd, char **line)
