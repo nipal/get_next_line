@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/03/02 06:20:21 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/03/02 08:11:21 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,12 @@
 /*
  *	si on copy le dernier element, on peut utiliser lstdel
  * */
-static	char	*copy_line(t_list *begin, char **dest, int nb_last)
+t_list	*copy_line(t_list *begin, char **dest)
 {
 	int		rest;
 	int		i;
-	t_list	*tmp;
+	t_list	*prev;
 	t_list	*elem;
-	char	*stmp;
 
 	rest = 0;
 	elem = begin;
@@ -30,22 +29,23 @@ static	char	*copy_line(t_list *begin, char **dest, int nb_last)
 	{
 		while (elem->next)
 		{
-			tmp = elem->next;
-			ft_memcopy(*dest + rest, (char*)elem->content, BUFF_SIZE);
-			rest += BUFF_SIZE;
-			free(elem->content);
-			free(elem);
-			elem = tmp;
+			prev = elem;
+			ft_memcopy(*dest + rest, (char*)elem->content, elem->content_size);
+			rest += elem->contetn_size;
+			elem = elem->next;
 		}
 		i = ((strchr((char*)elem->content), TARGET_CHAR) - (char*)elem->content);
 		ft_memcopy(*dest + rest, elem->content, (size_t)i);
-		stmp = (ft_strlen((char*)(elem->content + i))) ? ft_strdup((char*)((elem->content + i))) : NULL;
-		free(elem->content);
+		ft_memmove(elem->content, elem-content + i);
+		if (elem->content == BUFF_SIZE)
+			prev->next = NULL;
+		elem->content_size -= i;
+		ft_lstdel(begin);
 	}
-	return = (stmp);
+	return = (elem);// si on a free elem il faut remvyer null
 }
 
-static	t_list	*fill_line(t_list *begin, int fd)
+t_list	*fill_line(t_list *begin, int fd)
 {
 	t_list	*elem;
 	int		i;
@@ -75,6 +75,12 @@ static	t_list	*fill_line(t_list *begin, int fd)
 
 int	get_next_line(int const fd, char **line)
 {
+	static	t_list	fd_tab[NB_FD];
+
+	fd_tab[fd] = fill_line(fd_tab + fd, fd);
+	//	La il faudrait malloquer la ligne a la bonne taille
+	//
+	fd_tab[fd] = copie_line(fd_tab + fd, line, );
 }
 
 

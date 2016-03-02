@@ -6,7 +6,7 @@
 /*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/17 21:50:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/03/02 04:45:43 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/03/02 07:31:59 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <sys/stat.h> 
 # include <fcntl.h>
 # define BUFF_SIZE 32
+# define NB_FD	1024
 # define TARGET_CHAR '\n'
 # define DESTROY 1
 # define CLEAN 2

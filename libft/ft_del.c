@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
+/*   ft_del.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fjanoty <fjanoty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/04 18:24:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/03/02 09:00:08 by fjanoty          ###   ########.fr       */
+/*   Created: 2016/03/02 08:16:22 by fjanoty           #+#    #+#             */
+/*   Updated: 2016/03/02 09:04:19 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-void	ft_lstdelone(t_list **begin, void (*del)(void *, size_t))
+void	ft_del(void **mem, size_t size)
 {
-	if (begin && *begin)
-	{
-		del((*begin)->content, (*begin)->content_size);
-		free(*begin);
-		*begin = NULL;
-	}
+	ft_bzero(mem, size);
+	free(*mem);
+	*mem = NULL;
 }

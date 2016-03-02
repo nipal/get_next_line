@@ -6,7 +6,7 @@
 /*   By: fjanoty <fjanoty@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/04 18:24:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/03/02 04:00:52 by fjanoty          ###   ########.fr       */
+/*   Updated: 2016/03/02 09:06:44 by fjanoty          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void				*ft_memmove(void *dest, const void *src, size_t n)
 	else
 	{
 		i = n;
-		while (--i >= 0)
+		while (i-- > 0)
 			cp_dest[i] = cp_src[i];
 	}
 	return ((void*)dest);
