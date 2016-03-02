@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 void	ft_del(void **mem, size_t size)
 {
 	ft_bzero(mem, size);
