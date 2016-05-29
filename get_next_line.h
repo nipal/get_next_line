@@ -1,36 +1,40 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/02/17 21:50:51 by fjanoty           #+#    #+#             */
-/*   Updated: 2016/02/21 09:46:13 by fjanoty          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+/*
+ *  on stoqe le reste des fd dans 
+ *
+ *  -on cherche si il y a deja un fd assosicer
+ *	-si oui on cherche si il y reste une ligne
+ *	    -si oui on malloc une chaine fraiche + return 1 + memmove sur lereste
+ *	    -si non on empile la lecture puis on malloc la hainefraihe
+ *	-si non on ajoute on maillon de fd et on empile la lecture
+ *
+ *
+ *
+ *libft:
+ *
+ *  ft_memmove()
+ *  ft_lstaddback()
+ *  ft_lstcreate_elem()
+ *  ft_lst_delone()
+ *  ft_lst_del_all()
+ *  ft_strchr()
+ *
+ * */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include "libft.h"
 # include <stdlib.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# define BUFF_SIZE 32
-# define TARGET_CHAR '\n'
-# define DESTROY 1
-# define CLEAN 2
-# define COPY 4
 
-typedef	struct				s_dfile
+# define BUFF_SIZE 10
+# define TARGET '\0'
+
+typedef	struct	s_line
 {
-	struct s_dfile			*next_fd;
-	struct s_dfile			*next_str;
-	int						fd;
-	int						i;
-	int						size;
-	char					*str;
-}							t_dfile;
-int							get_next_line(int const fd, char **line);
+    int	    fd;
+    char    str[BUFF_SIZE + 1];
+    struct  *s_line next;
+}		t_line;
+
+
+int get_next_line(const int fd, char **line);
 #endif
