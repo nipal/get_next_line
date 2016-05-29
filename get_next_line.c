@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fjanoty <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/02/17 21:53:11 by fjanoty           #+#    #+#             */
+/*   Updated: 2016/02/21 14:09:03 by fjanoty          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 
 /*   [recherchede fd]
@@ -59,15 +70,17 @@ t_list	*reading_stack(int fd)
 {
     t_list  *begin;
     t_list  *elem;
-    char    str[BUFF_SIZE + 1];
+    char    str[BUFF_SIZE];
     int	    ret;
 
     ret = read(fd, str, BUFF_SIZE);
-    str[ret] = '\0';
-    elem = ft_creat_elem(str, ret);
-    while(strchr(str, ))
+    elem = ft_lstnew(str, ret);
+    ft_lst_add_end(&begin, elem);
+    while(strnchr(str, TARGET, ret) == NULL && ret == BUFF_SIZE)
     {
-	;
+	ret = read(fd, str, BUFF_SIZE);
+	elem = ft_lstnew(str, ret);
+	ft_lst_add_end(&begin, elem);
     }
     return (begin);
 }
@@ -81,6 +94,27 @@ t_list	*reading_stack(int fd)
  *  output:()
  * */
 
+char	*malloc_new_line(t_line *line, t_list *rest)
+{
+    int	    size;
+    char    *str;
+    t_list  *elem;
+
+    if (!line)
+	return (NULL);
+    size = line->size;
+    elem = rest;
+    while (elem)
+    {
+	if (strnchr(elem->content, TARGET, elem->content_size) == NULL)
+	    size += elem->content_size;
+	else
+	    size += strnchr(elem->content, TARGET, elem->content_size) - elem->content;
+    }
+    str = (char*)malloc(sizeof(char) * (size + 1));
+
+    // la on copie dans str MIN(line->size, size)
+}
 
 /*  [mise a jour]
  *  
@@ -93,10 +127,7 @@ t_list	*reading_stack(int fd)
  *  output:()
  * */
 
-Femmeboutiquone
-int
-get_next_line(const int fd, char **line);
-int get_next_line(int fd, char **line)
+int get_next_line(const int fd, char **line);
 {
     static  *t_line lst_fd = NULL;
 
